@@ -1,0 +1,148 @@
+### Define the base URL and tokens
+@baseURL = https://rezaalfakarani-production.up.railway.app
+@penjualToken = <pastePenjualToken>
+@pelangganToken = <pastePelangganToken>
+
+### Register a new admin user
+POST {{baseURL}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "adminUser123",
+  "password": "securePassword",
+  "role": "penjual"
+}
+
+### Register a new pelanggan user
+POST {{baseURL}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "customerUser456",
+  "password": "customerPassword",
+  "role": "pelanggan"
+}
+
+### Login as admin
+POST {{baseURL}}/api/auth/login
+Content-Type: application/json
+
+{
+  "identifier": "adminUser123",
+  "password": "securePassword"
+}
+
+### Login as pelanggan
+POST {{baseURL}}/api/auth/login
+Content-Type: application/json
+
+{
+  "identifier": "customerUser456",
+  "password": "customerPassword"
+}
+
+### Get all users (Admin only)
+GET {{baseURL}}/api/users
+Authorization: Bearer {{penjualToken}}
+
+### Get user by ID
+GET {{baseURL}}/api/users/pelanggan1
+Authorization: Bearer {{penjualToken}}
+
+### Create a new product (Admin only)
+### ENUM("Baju", "Celana", "Aksesoris")
+POST {{baseURL}}/api/products
+Authorization: Bearer {{penjualToken}}
+Content-Type: application/json
+
+{
+  "name": "Badag",
+  "description": "Sample description for product",
+  "price": 200,
+  "stock": 100,
+  "category": "Baju",
+  "imageUrl": "http://example.com/sample_image.jpg"
+}
+
+### Get all products
+GET {{baseURL}}/api/products
+
+### Update a product (Admin only)
+PUT {{baseURL}}/api/products/1
+Authorization: Bearer {{penjualToken}}
+Content-Type: application/json
+
+{
+  "name": "Badag Hero ML v2",
+  "description": "Updated description for product",
+  "price": 250,
+  "stock": 80,
+  "category": "Baju",
+  "imageUrl": "http://example.com/updated_sample_image.jpg"
+}
+
+### Delete a product (Admin only)
+DELETE {{baseURL}}/api/products/2
+Authorization: Bearer {{penjualToken}}
+
+### Create a new order (Pelanggan) - Replace with valid token
+POST {{baseURL}}/api/orders
+Authorization: Bearer {{pelangganToken}}
+Content-Type: application/json
+
+{
+  "userId": "pelanggan1",
+  "products": [
+    {
+      "id": 1,
+      "quantity": 1,
+      "price": 200
+    }
+  ],
+  "shippingDetails": {
+    "trackingNumber": "SHIP123456",
+    "shippingCompany": "FastShip",
+    "status": "terkirim",
+    "estimatedDelivery": "2024-11-30"
+  }
+}
+
+### Get all orders
+GET {{baseURL}}/api/orders
+Authorization: Bearer {{penjualToken}}
+
+### Update an order (Admin only)
+PUT {{baseURL}}/api/orders/1
+Authorization: Bearer {{penjualToken}}
+Content-Type: application/json
+
+{
+  "status": "selesai",
+  "shippingDetails": {
+    "trackingNumber": "SHIP123456_UPDATED",
+    "shippingCompany": "FastShip Express",
+    "status": "terkirim",
+    "estimatedDelivery": "2024-12-10"
+  }
+}
+
+### Delete an order (Admin only)
+DELETE {{baseURL}}/api/orders/2
+Authorization: Bearer {{penjualToken}}
+
+
+### Tambah Rating dan Review
+POST {{baseURL}}/api/ratings
+Authorization: Bearer {{pelangganToken}}
+Content-Type: application/json
+
+{
+  "orderId": 1,
+  "productId": 1,  
+  "rating": 5,
+  "reviewText": "BARANGNYA MANA OI, BELUM NYAMPE"
+}
+
+### Test GET /api/ratings - Retrieve all reviews (Admin & Pelanggan only)
+GET {{baseURL}}/api/ratings
+Authorization: Bearer {{pelangganToken}}
